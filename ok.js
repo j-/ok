@@ -804,11 +804,14 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 		return this.length;
 	},
 	/**
-	 * Get the item at a given index
+	 * Get the item at a given index. Can be negative.
 	 * @param {int} Index
 	 * @return {*?} Item at given index
 	 */
 	get: function (index) {
+		if (index < 0) {
+			index = this.length + index;
+		}
 		if (hasProperty(this, index)) {
 			return this[index];
 		}
