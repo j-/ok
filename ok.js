@@ -448,7 +448,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 			this.initProperties(defaults);
 		}
 		if (properties) {
-			this.initProperties(properties);
+			this.setMap(properties);
 		}
 	},
 	/**
