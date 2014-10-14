@@ -64,7 +64,7 @@ ok.SimpleView = ok.View.extend({
 	render: function () {
 		this.empty();
 		if (this.template) {
-			this.template(this.watch.get());
+			this.innerHTML = this.template(this.watch.get());
 		}
 	},
 	start: function () {
