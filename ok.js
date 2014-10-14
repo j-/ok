@@ -70,10 +70,6 @@ var EVENT_CHANGE = 'change';
  */
 var EVENT_SORT = 'sort';
 
-// function names
-ok.childFnName = 'fn';
-ok.parentFnName = 'old';
-
 /**
  * Insert a superconstructor into the prototype chain for a constructor
  * @param {Function} Child Constructor function
@@ -116,16 +112,6 @@ ok.extendClass = function (Parent, proto) {
 		if (hasProperty(proto, name)) {
 			value = proto[name];
 			Child.prototype[name] = value;
-			if (
-				// if this property is a function
-				(typeof value === 'function') &&
-				// and the function was already defined in the parent
-				(name in Parent.prototype) &&
-				// and the new function has the right name
-				(value.name === ok.childFnName)
-			) {
-				value[ok.parentFnName] = Parent.prototype[name];
-			}
 		}
 	}
 	return Child;
@@ -361,14 +347,14 @@ ok.Property = ok.Data.extend(/** @lends module:ok.Property.prototype */{
 	 * Optionally initialize this property with a value
 	 * @param {*=} initValue Initial value for this property
 	 */
-	constructor: function fn (initValue) {
+	constructor: function (initValue) {
 		if (arguments.length) {
 			this.set(initValue);
 		}
 		else {
 			this.set(this.defaultValue);
 		}
-		fn.old.apply(this, arguments);
+		ok.Data.apply(this, arguments);
 	},
 	/**
 	 * Getter which returns the internal value

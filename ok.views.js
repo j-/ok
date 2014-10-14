@@ -80,8 +80,8 @@ ok.CollectionView = ok.View.extend({
 	childOptions: null,
 	started: false,
 	resort: true,
-	constructor: function fn (options) {
-		fn.old.apply(this, arguments);
+	constructor: function (options) {
+		ok.View.apply(this, arguments);
 		this.children = [];
 		this.started = false;
 		if (!options) {
@@ -105,8 +105,8 @@ ok.CollectionView = ok.View.extend({
 		this.listenTo(this.watch, 'add', this.addItem.bind(this));
 		this.listenTo(this.watch, 'remove', this.removeItem.bind(this));
 	},
-	stop: function fn () {
-		fn.old.apply(this, arguments);
+	stop: function () {
+		ok.View.prototype.stop.call(this);
 		this.started = false;
 		_.each(this.children, function (child) {
 			child.view.stop();

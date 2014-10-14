@@ -6,11 +6,11 @@
 		$: function (selector) {
 			return this.$el.find(selector);
 		},
-		setElement: function fn (el) {
+		setElement: function (el) {
 			if (el instanceof $) {
 				el = el.get(0);
 			}
-			fn.old.call(this, el);
+			ok.View.prototype.setElement.call(this, el);
 			this.$el = $(el);
 		}
 	});
