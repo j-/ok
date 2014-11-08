@@ -27,6 +27,7 @@ ok.View = ok.Base.extend({
 		if (options.watch) {
 			this.watch = options.watch;
 		}
+		this.childViews = [];
 		this.init(options);
 	},
 	setElement: function (el) {
@@ -46,13 +47,35 @@ ok.View = ok.Base.extend({
 		}
 	},
 	render: function () {
-		// no-op
+		this.renderChildViews();
 	},
 	start: function () {
-		// no-op
+		this.startChildViews();
 	},
 	stop: function () {
 		this.stopListening();
+		this.stopChildViews();
+	},
+	addChildView: function (view, options) {
+		if (typeof view === 'function') {
+			view = new view(options);
+		}
+		this.childViews.push(view);
+	},
+	removeChildView: function (view) {
+		var index = _.indexOf(this.childViews, view);
+		if (index >= 0) {
+			this.childViews.splice(index, 1);
+		}
+	},
+	renderChildViews: function () {
+		_.invoke(this.childViews, 'render');
+	},
+	startChildViews: function () {
+		_.invoke(this.childViews, 'start');
+	},
+	stopChildViews: function () {
+		_.invoke(this.childViews, 'stop');
 	}
 });
 
