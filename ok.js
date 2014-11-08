@@ -14,7 +14,7 @@ var ok = {
 	 * Current version of ok.js
 	 * @const {string}
 	 */
-	VERSION: '0.2.1'
+	VERSION: '0.3.0'
 };
 
 // expose ok.js to browser
