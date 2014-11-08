@@ -20,8 +20,8 @@ ok.View = ok.Base.extend({
 		}
 		else {
 			this.createElement();
-			if (options.id) {
-				this.el.id = options.id;
+			if (options.id || this.id) {
+				this.el.id = options.id || this.id;
 			}
 		}
 		if (options.watch) {
