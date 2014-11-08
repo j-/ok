@@ -61,6 +61,7 @@ ok.View = ok.Base.extend({
 			view = new view(options);
 		}
 		this.childViews.push(view);
+		return view;
 	},
 	removeChildView: function (view) {
 		var index = _.indexOf(this.childViews, view);
