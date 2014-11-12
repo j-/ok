@@ -27,6 +27,7 @@ ok.View = ok.Base.extend({
 		if (options.watch) {
 			this.watch = options.watch;
 		}
+		this.isStarted = false;
 		this.childViews = [];
 		this.init(options);
 	},
@@ -50,9 +51,12 @@ ok.View = ok.Base.extend({
 		this.renderChildViews();
 	},
 	start: function () {
+		this.stop();
+		this.isStarted = true;
 		this.startChildViews();
 	},
 	stop: function () {
+		this.isStarted = false;
 		this.stopListening();
 		this.stopChildViews();
 	},
@@ -61,6 +65,9 @@ ok.View = ok.Base.extend({
 			view = new view(options);
 		}
 		this.childViews.push(view);
+		if (this.isStarted) {
+			view.start();
+		}
 		return view;
 	},
 	removeChildView: function (view) {
@@ -92,7 +99,7 @@ ok.SimpleView = ok.View.extend({
 		}
 	},
 	start: function () {
-		this.stop();
+		ok.View.prototype.start.call(this);
 		if (this.watch) {
 			this.listenTo(this.watch, 'change', this.render.bind(this));
 		}
@@ -107,7 +114,6 @@ ok.CollectionView = ok.View.extend({
 	constructor: function (options) {
 		ok.View.apply(this, arguments);
 		this.children = [];
-		this.started = false;
 		if (!options) {
 			options = {};
 		}
@@ -117,24 +123,12 @@ ok.CollectionView = ok.View.extend({
 		if (options.defaultConstructor) {
 			this.defaultConstructor = options.defaultConstructor;
 		}
-		this.listenTo(this.watch, 'sort', this.sort.bind(this));
 	},
 	start: function () {
-		this.stop();
-		this.started = true;
-		_.each(this.children, function (child) {
-			var view = child.view;
-			view.start();
-		});
+		ok.View.prototype.start.call(this);
 		this.listenTo(this.watch, 'add', this.addItem.bind(this));
 		this.listenTo(this.watch, 'remove', this.removeItem.bind(this));
-	},
-	stop: function () {
-		ok.View.prototype.stop.call(this);
-		this.started = false;
-		_.each(this.children, function (child) {
-			child.view.stop();
-		});
+		this.listenTo(this.watch, 'sort', this.sort.bind(this));
 	},
 	render: function () {
 		this.empty();
@@ -153,6 +147,7 @@ ok.CollectionView = ok.View.extend({
 			item: item,
 			view: view
 		});
+		this.addChildView(view);
 		view.render();
 		// insert into DOM
 		if (!nextChild) {
@@ -161,17 +156,16 @@ ok.CollectionView = ok.View.extend({
 		else {
 			this.el.insertBefore(view.el, nextChild.view.el);
 		}
-		// only start when asked to
-		if (this.started) {
-			view.start();
-		}
 	},
 	removeItem: function (item) {
 		_.each(this.children, function (child, i) {
 			if (child && child.item === item) {
-				var el = child.view.el;
+				var view = child.view;
+				var el = view.el;
 				el.parentNode.removeChild(el);
 				this.children.splice(i, 1);
+				this.removeChildView(view);
+				view.stop();
 				return false;
 			}
 		}, this);
