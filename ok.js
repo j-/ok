@@ -824,6 +824,20 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 		return this.length;
 	},
 	/**
+	 * Set the contents of this array. Empties it first.
+	 * @param {Array} items New contents of array
+	 * @return {int} New length after items have been added
+	 * @fires remove
+	 * @fires add
+	 */
+	set: function (items) {
+		var args = slice(items);
+		args.unshift(0);
+		this.empty();
+		this.insert.apply(this, args);
+		return this.length;
+	},
+	/**
 	 * Get the item at a given index. Can be negative.
 	 * @param {int} Index
 	 * @return {*?} Item at given index
