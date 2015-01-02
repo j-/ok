@@ -159,7 +159,7 @@ ok.extendClass = function (Parent) {
 ok.extendThisClass = function () {
 	var protos = slice(arguments);
 	protos.unshift(this);
-	return ok.extendClass.apply(ok, protos);
+	return ok.extendClass.apply(this, protos);
 };
 
 /**
