@@ -2,7 +2,32 @@
  * ok.js: Model/View/Controller framework
  * @module ok
  */
-(function () {
+(function (factory, root) {
+
+'use strict';
+
+var _, ok;
+
+// project uses amd
+if (typeof define === 'function' && define.amd) {
+	define('ok', ['underscore'], factory);
+}
+else {
+	// project uses require
+	if (typeof module !== 'undefined' && typeof require === 'function') {
+		_ = require('underscore');
+		ok = factory(_, root);
+		module.exports = ok;
+	}
+	// project is browser
+	else {
+		ok = factory(root._, root);
+		root.ok = ok;
+		root.okaylib = ok;
+	}
+}
+
+})(function (_, root) {
 
 'use strict';
 
@@ -17,15 +42,14 @@ var ok = {
 	VERSION: '0.3.1'
 };
 
-// expose ok.js to browser
-if (typeof window !== 'undefined') {
-	var _old = window.ok;
-	window.ok = window.okaylib = ok;
-	ok.noConflict = function () {
-		window.ok = _old;
-		return ok;
-	};
+if (!root) {
+	root = this;
 }
+var _old = root.ok;
+ok.noConflict = function () {
+	root.ok = _old;
+	return ok;
+};
 
 // internal reference to common prototypes
 var $Array = Array.prototype;
@@ -1114,4 +1138,6 @@ ok.Controller = ok.Base.extend(/** @lends module:ok.Controller.prototype */{
 
 });
 
-})();
+return ok;
+
+}, this);
