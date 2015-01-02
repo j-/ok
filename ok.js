@@ -39,7 +39,7 @@ var ok = {
 	 * Current version of ok.js
 	 * @const {string}
 	 */
-	VERSION: '0.4.0'
+	VERSION: '0.5.1'
 };
 
 // prevent global namespace collisions
