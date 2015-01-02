@@ -54,6 +54,7 @@ ok.noConflict = function () {
 // internal reference to common prototypes
 var $Array = Array.prototype;
 var $Object = Object.prototype;
+var $Function = Function.prototype;
 
 // convenience functions
 var slice = function (arr, start, end) {
@@ -164,7 +165,7 @@ ok.create = function (Class) {
 	// also see http://stackoverflow.com/a/8843181
 	var args = slice(arguments, 1);
 	args.unshift(null);
-	return new (Function.prototype.bind.apply(Class, args));
+	return new ($Function.bind.apply(Class, args));
 };
 
 /**
