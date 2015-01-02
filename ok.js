@@ -449,7 +449,8 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 *   `properties`
 	 * @param {Object=} properties Hash of properties to initialize this with
 	 */
-	init: function (properties) {
+	constructor: function (properties) {
+		ok.Data.apply(this, arguments);
 		var defaults = this.getDefaults();
 		if (!this.properties) {
 			this.properties = {};
