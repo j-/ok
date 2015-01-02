@@ -797,6 +797,15 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 		return removed;
 	},
 	/**
+	 * Remove all items from the array
+	 * @return {int} New length after items have been removed (always zero)
+	 * @fires remove
+	 */
+	empty: function () {
+		this.remove();
+		return this.length;
+	},
+	/**
 	 * Insert items into the array
 	 * @param {int} start Starting index
 	 * @param {...*} items New items to insert
