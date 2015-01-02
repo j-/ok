@@ -114,11 +114,14 @@ ok.inherits = function (Child, Parent) {
  * Takes a superconstructor and returns a child constructor with its
  *   prototype extended
  * @param {Function} Parent Superconstructor function
- * @param {Object=} proto Prototype object
+ * @param {...Object} protos Prototype object
  * @return {Function} Child constructor function
  */
-ok.extendClass = function (Parent, proto) {
+ok.extendClass = function (Parent) {
 	var name, value;
+	var protos = slice(arguments, 1);
+	protos.unshift({});
+	var proto = _.extend.apply(_, protos);
 	// sub class
 	var Child = proto && hasProperty(proto, 'constructor') ?
 		proto.constructor :
@@ -145,13 +148,16 @@ ok.extendClass = function (Parent, proto) {
 /**
  * Takes a prototype object and returns a child constructor which inherits from
  *   the current context (`this`, must be a function) and implements the new
- *   prototoype.
+ *   prototype. Can be passed multiple prototypes which will each be applied in
+ *   the order they are given.
  * @this {Function} Parent Superconstructor function
- * @param {Object} proto Prototype object
+ * @param {...Object} protos Prototype objects
  * @return {Function} Child constructor function
  */
-ok.extendThisClass = function (proto) {
-	return ok.extendClass(this, proto);
+ok.extendThisClass = function () {
+	var protos = slice(arguments);
+	protos.unshift(this);
+	return ok.extendClass.apply(ok, protos);
 };
 
 /**
