@@ -120,8 +120,9 @@ ok.inherits = function (Child, Parent) {
 ok.extendClass = function (Parent) {
 	var name, value;
 	var protos = slice(arguments, 1);
-	protos.unshift({});
-	var proto = _.extend.apply(_, protos);
+	var proto = {};
+	protos.unshift(proto);
+	_.extend.apply(_, protos);
 	// sub class
 	var Child = proto && hasProperty(proto, 'constructor') ?
 		proto.constructor :
@@ -130,18 +131,9 @@ ok.extendClass = function (Parent) {
 		};
 	ok.inherits(Child, Parent);
 	// copy static properties from super class to sub class
-	for (name in Parent) {
-		if (hasProperty(Parent, name)) {
-			Child[name] = Parent[name];
-		}
-	}
+	_.extend(Child, Parent);
 	// copy prototype from super class to sub class
-	for (name in proto) {
-		if (hasProperty(proto, name)) {
-			value = proto[name];
-			Child.prototype[name] = value;
-		}
-	}
+	_.extend(Child.prototype, proto);
 	// shortcut
 	Child.fn = Child.prototype;
 	return Child;
@@ -712,7 +704,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
  * @augments {Array}
  * @augments {module:ok.Base}
  */
-ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
+ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototype */{
 	constructor: function (items) {
 		Array.call(this);
 		if (items) {
@@ -888,7 +880,6 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 		return null;
 	}
 });
-_.extend(ok.Items.fn, ok.Base.fn);
 
 // these methods return a copy of input array which we then wrap
 var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
