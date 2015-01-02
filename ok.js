@@ -142,6 +142,8 @@ ok.extendClass = function (Parent) {
 			Child.prototype[name] = value;
 		}
 	}
+	// shortcut
+	Child.fn = Child.prototype;
 	return Child;
 };
 
@@ -289,6 +291,7 @@ ok.Events.prototype = {
 		}
 	}
 };
+ok.Events.fn = ok.Events.prototype;
 
 /**
  * Base class. All ok.js classes extend from this base (except {@link Items}).
@@ -302,13 +305,14 @@ ok.Base = function (/* args... */) {
 		this.init.apply(this, args);
 	}
 };
-_.extend(ok.Base.prototype, ok.Events.prototype);
+ok.Base.fn = ok.Base.prototype;
+_.extend(ok.Base.fn, ok.Events.fn);
 
 /**
  * Initialization for this instance.
  * @virtual
  */
-ok.Base.prototype.init = function () {
+ok.Base.fn.init = function () {
 	// no-op
 };
 
@@ -856,7 +860,7 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 		return null;
 	}
 });
-_.extend(ok.Items.prototype, ok.Events.prototype);
+_.extend(ok.Items.fn, ok.Events.fn);
 
 // these methods return a copy of input array which we then wrap
 var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
@@ -865,7 +869,7 @@ var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
 	'sortBy', 'union', 'uniq', 'unique', 'where', 'without', 'zip'];
 
 _.each(itemsMethodsWrap, function (methodName) {
-	ok.Items.prototype[methodName] = function () {
+	ok.Items.fn[methodName] = function () {
 		var result;
 		var args = slice(arguments);
 		args.unshift(this);
@@ -882,7 +886,7 @@ var itemsMethodsNowrap = ['all', 'any', 'contains', 'countBy', 'detect', 'each',
 	'sortedIndex'];
 
 _.each(itemsMethodsNowrap, function (methodName) {
-	ok.Items.prototype[methodName] = function () {
+	ok.Items.fn[methodName] = function () {
 		var result;
 		var args = slice(arguments);
 		args.unshift(this);
@@ -895,7 +899,7 @@ _.each(itemsMethodsNowrap, function (methodName) {
 var itemsMethodsSpecial = ['sample', 'first', 'last'];
 
 _.each(itemsMethodsSpecial, function (methodName) {
-	ok.Items.prototype[methodName] = function () {
+	ok.Items.fn[methodName] = function () {
 		var result;
 		var args = slice(arguments);
 		var len = args.length;
