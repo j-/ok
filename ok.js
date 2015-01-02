@@ -189,6 +189,23 @@ ok.createThis = function () {
 };
 
 /**
+ * Naiive clone implementation based on expected get/set pattern used by Base.
+ * @this {Object} instance Instance to clone
+ * @param {...*} args Arguments to pass to clone's constructor
+ * @return {Object} Clone of this instance
+ */
+ok.cloneThis = function () {
+	var data;
+	var Constructor = this.constructor;
+	var clone = ok.createThis.apply(Constructor, arguments);
+	if (typeof this.get === 'function' && typeof clone.set === 'function') {
+		data = this.get();
+		clone.set(data);
+	}
+	return clone;
+};
+
+/**
  * Class which implements the observable pattern. Exposes methods for listening
  *   to and triggering arbitrary events.
  * @constructor
@@ -315,6 +332,13 @@ _.extend(ok.Base.fn, ok.Events.fn);
 ok.Base.fn.init = function () {
 	// no-op
 };
+
+/**
+ * Naiive clone implementation based on expected get/set pattern used by Base.
+ * @param {...*} args Arguments to pass to clone's constructor
+ * @return {Object} Clone of this instance
+ */
+ok.Base.fn.clone = ok.cloneThis;
 
 /**
  * Create a new instance of this class
@@ -686,7 +710,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
  * Extended array with added convenience methods and events.
  * @class
  * @augments {Array}
- * @augments {module:ok.Events}
+ * @augments {module:ok.Base}
  */
 ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 	constructor: function (items) {
@@ -846,11 +870,15 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 		return this.length;
 	},
 	/**
-	 * Get the item at a given index. Can be negative.
-	 * @param {int} Index
-	 * @return {*?} Item at given index
+	 * Get the item at a given index. Can be negative. If no index is given, a
+	 *   reference to the array will be returned.
+	 * @param {int=} Index of item to get
+	 * @return {*?} Item at given index or whole array
 	 */
 	get: function (index) {
+		if (arguments.length < 1) {
+			return this;
+		}
 		if (index < 0) {
 			index = this.length + index;
 		}
@@ -860,7 +888,7 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 		return null;
 	}
 });
-_.extend(ok.Items.fn, ok.Events.fn);
+_.extend(ok.Items.fn, ok.Base.fn);
 
 // these methods return a copy of input array which we then wrap
 var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
