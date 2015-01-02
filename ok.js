@@ -122,19 +122,19 @@ ok.extendClass = function (Parent) {
 	protos.unshift(proto);
 	_.extend.apply(_, protos);
 	// sub class
-	var Child = proto && hasProperty(proto, 'constructor') ?
+	var Class = proto && hasProperty(proto, 'constructor') ?
 		proto.constructor :
 		function () {
 			return Parent.apply(this, arguments);
 		};
-	ok.inherits(Child, Parent);
+	ok.inherits(Class, Parent);
 	// copy static properties from super class to sub class
-	_.extend(Child, Parent);
+	_.extend(Class, Parent);
 	// copy prototype from super class to sub class
-	_.extend(Child.prototype, proto);
+	_.extend(Class.prototype, proto);
 	// shortcut
-	Child.fn = Child.prototype;
-	return Child;
+	Class.fn = Class.prototype;
+	return Class;
 };
 
 /**
@@ -200,7 +200,7 @@ ok.cloneThis = function () {
  *   to and triggering arbitrary events.
  * @constructor
  */
-ok.Events = function () {};
+ok.Events = function Events () {};
 
 var eventIndex = 0;
 ok.Events.prototype = {
@@ -306,7 +306,7 @@ ok.Events.fn = ok.Events.prototype;
  * @augments {module:ok.Events}
  * @param {...*} args Arguments passed to through to {@link module:ok.Base#init}
  */
-ok.Base = function (/* args... */) {
+ok.Base = function Base (/* args... */) {
 	var args = slice(arguments);
 	if (this.init) {
 		this.init.apply(this, args);
@@ -355,6 +355,10 @@ ok.Base.extend = ok.extendThisClass;
  * @param {...*} args Arguments passed to through to {@link module:ok.Base#init}
  */
 ok.Data = ok.Base.extend(/** @lends module:ok.Data.prototype */{
+	// rename constructor
+	constructor: function Data () {
+		return ok.Base.apply(this, arguments);
+	},
 	/**
 	 * Get the simple data representation of this element
 	 * @virtual
@@ -396,7 +400,7 @@ ok.Property = ok.Data.extend(/** @lends module:ok.Property.prototype */{
 	 * Optionally initialize this property with a value
 	 * @param {*=} initValue Initial value for this property
 	 */
-	constructor: function (initValue) {
+	constructor: function Property (initValue) {
 		if (arguments.length) {
 			this.set(initValue);
 		}
@@ -474,7 +478,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 *   `properties`
 	 * @param {Object=} properties Hash of properties to initialize this with
 	 */
-	constructor: function (properties) {
+	constructor: function Map (properties) {
 		ok.Data.apply(this, arguments);
 		var defaults = this.getDefaults();
 		if (!this.properties) {
@@ -703,7 +707,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
  * @augments {module:ok.Base}
  */
 ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototype */{
-	constructor: function (items) {
+	constructor: function Items (items) {
 		Array.call(this);
 		if (items) {
 			this.set(items);
@@ -972,7 +976,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	/**
 	 * Initialize with items
 	 */
-	constructor: function (items) {
+	constructor: function Collection (items) {
 		this.items = new ok.Items();
 		this.start();
 		if (items) {
@@ -1246,7 +1250,10 @@ _.forEach(itemsMethodsSpecial, function (methodName) {
  * @augments {module:ok.Base}
  */
 ok.Controller = ok.Base.extend(/** @lends module:ok.Controller.prototype */{
-
+	// rename constructor
+	constructor: function Controller () {
+		return ok.Base.apply(this, arguments);
+	}
 });
 
 return ok;
