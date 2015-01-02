@@ -1,0 +1,30 @@
+{
+  "name": "ok",
+  "version": "0.3.1",
+  "description": "Extensible MVC library",
+  "main": "ok.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/j-/ok.git"
+  },
+  "keywords": [
+    "ok",
+    "okay",
+    "okaylib",
+    "extensible",
+    "mvc",
+    "library",
+    "model",
+    "view",
+    "controller"
+  ],
+  "author": "Jamie Hoeks <j@skeoh.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/j-/ok/issues"
+  },
+  "homepage": "https://github.com/j-/ok",
+  "dependencies": {
+    "underscore": "^1.7.0"
+  }
+}
