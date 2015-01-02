@@ -1060,10 +1060,8 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 *   added to this collection
 	 * @fires add
 	 */
-	add: function (items) {
-		if (!_.isArray(items)) {
-			items = [items];
-		}
+	add: function () {
+		var items = _.flatten(arguments);
 		for (var i = 0, l = items.length; i < l; i++) {
 			this.addItem(items[i], this.items.length);
 		}
@@ -1114,7 +1112,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 */
 	findInsertIndex: function (item) {
 		var index = -1;
-		_.forEach(this.items, function (comparedTo, newIndex) {
+		this.items.forEach(function (comparedTo, newIndex) {
 			if (this.comparator(comparedTo, item) <= 0) {
 				index = newIndex;
 				return false;
@@ -1150,9 +1148,10 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	},
 	/**
 	 * Remove all items from this collection
+	 * @fires remove
 	 */
 	empty: function () {
-		return this.items.remove();
+		return this.items.empty();
 	},
 	/**
 	 * Reset the entire collection
@@ -1171,11 +1170,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @return {Array.<*>} Serialized array
 	 */
 	get: function () {
-		var items = this.items;
-		var result = [];
-		for (var i = 0, l = items.length; i < l; i++) {
-			result.push(items[i].get());
-		}
+		var result = this.items.invoke('get');
 		return result;
 	},
 	/**
@@ -1184,13 +1179,8 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @return {?*} Item, or `null` if not found
 	 */
 	identify: function (item) {
-		var items = this.items;
-		for (var i = 0, l = items.length; i < l; i++) {
-			if (items[i] === item) {
-				return items[i];
-			}
-		}
-		return null;
+		var contained = this.items.contains(item);
+		return contained ? item : null;
 	},
 	/**
 	 * Iterate through this collection's items and invoke a callback function
@@ -1203,7 +1193,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 		if (arguments.length < 2) {
 			context = this;
 		}
-		_.forEach(this.items, iterator, context);
+		return this.items.forEach(iterator, context);
 	},
 	/**
 	 * Used to compare two items when sorting.
