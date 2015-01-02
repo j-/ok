@@ -470,12 +470,10 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	destroy: function () {
 		var properties = this.properties;
 		var prop;
-		for (var name in properties) {
-			if (hasProperty(properties, name)) {
-				prop = this.getProperty(name);
-				this.stopListening(prop, EVENT_CHANGE);
-			}
-		}
+		_.forEach(properties, function (prop, name) {
+			prop = this.getProperty(name);
+			this.stopListening(prop, EVENT_CHANGE);
+		}, this);
 	},
 	/**
 	 * Get defaults hash. If it is a function, execute it and use the result.
@@ -570,13 +568,11 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 *   function invoked.
 	 */
 	getMap: function () {
-		var result = {};
 		var map = this.properties;
-		for (var name in map) {
-			if (hasProperty(map, name)) {
-				result[name] = map[name].get();
-			}
-		}
+		var pairs = _.map(map, function (prop, name) {
+			return [name, prop.get()];
+		});
+		var result = _.object(pairs);
 		return result;
 	},
 	/**
@@ -646,11 +642,9 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 */
 	setMap: function (attrs) {
 		attrs = attrs || {};
-		for (var name in attrs) {
-			if (hasProperty(attrs, name)) {
-				this.setValue(name, attrs[name]);
-			}
-		}
+		_.each(attrs, function (val, name) {
+			this.setValue(name, val);
+		}, this);
 	},
 	/**
 	 * Set the value of a single property
