@@ -684,8 +684,11 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
  * @augments {module:ok.Events}
  */
 ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
-	constructor: function () {
+	constructor: function (items) {
 		Array.call(this);
+		if (items) {
+			this.set(items);
+		}
 	},
 	/**
 	 * Remove an item off the top of the stack
