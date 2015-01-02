@@ -1174,19 +1174,6 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 		return contained ? item : null;
 	},
 	/**
-	 * Iterate through this collection's items and invoke a callback function
-	 *   with a reference to each item
-	 * @param {Function} iterator Callback function
-	 * @param {*=} context Optional context to apply to callback function. Will
-	 *   use the collection by default.
-	 */
-	each: function (iterator, context) {
-		if (arguments.length < 2) {
-			context = this;
-		}
-		return this.items.forEach(iterator, context);
-	},
-	/**
 	 * Used to compare two items when sorting.
 	 * @param {*} a Left item for comparison
 	 * @param {*} b Right item for comparison
@@ -1218,6 +1205,41 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	at: function (index) {
 		return this.items.get(index);
 	}
+});
+
+_.forEach(itemsMethodsWrap, function (methodName) {
+	ok.Collection.fn[methodName] = function () {
+		var result;
+		var args = slice(arguments);
+		args.unshift(this.items);
+		result = _[methodName].apply(_, args);
+		result = ok.Items.create(result);
+		return result;
+	};
+});
+
+_.forEach(itemsMethodsNowrap, function (methodName) {
+	ok.Collection.fn[methodName] = function () {
+		var result;
+		var args = slice(arguments);
+		args.unshift(this.items);
+		result = _[methodName].apply(_, args);
+		return result;
+	};
+});
+
+_.forEach(itemsMethodsSpecial, function (methodName) {
+	ok.Collection.fn[methodName] = function () {
+		var result;
+		var args = slice(arguments);
+		var len = args.length;
+		args.unshift(this.items);
+		result = _[methodName].apply(_, args);
+		if (len > 0) {
+			result = ok.Items.create(result);
+		}
+		return result;
+	};
 });
 
 /**
