@@ -857,6 +857,56 @@ ok.Items = ok.extendClass(Array, /** @lends module:ok.Items.prototype */{
 });
 _.extend(ok.Items.prototype, ok.Events.prototype);
 
+// these methods return a copy of input array which we then wrap
+var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
+	'foldl', 'foldr', 'initial', 'inject', 'intersection', 'map', 'partition',
+	'pluck', 'reduce', 'reduceRight', 'reject', 'rest', 'select', 'shuffle',
+	'sortBy', 'union', 'uniq', 'unique', 'where', 'without', 'zip'];
+
+_.each(itemsMethodsWrap, function (methodName) {
+	ok.Items.prototype[methodName] = function () {
+		var result;
+		var args = slice(arguments);
+		args.unshift(this);
+		result = _[methodName].apply(_, args);
+		result = ok.Items.create(result);
+		return result;
+	};
+});
+
+// these methods return a value within the array or another result not an array
+var itemsMethodsNowrap = ['all', 'any', 'contains', 'countBy', 'detect', 'each',
+	'every', 'find', 'findWhere', 'forEach', 'groupBy', 'include', 'indexBy',
+	'indexOf', 'invoke', 'lastIndexOf', 'max', 'min', 'object', 'size', 'some',
+	'sortedIndex'];
+
+_.each(itemsMethodsNowrap, function (methodName) {
+	ok.Items.prototype[methodName] = function () {
+		var result;
+		var args = slice(arguments);
+		args.unshift(this);
+		result = _[methodName].apply(_, args);
+		return result;
+	};
+});
+
+// these are special methods whose return value depends on their inputs
+var itemsMethodsSpecial = ['sample', 'first', 'last'];
+
+_.each(itemsMethodsSpecial, function (methodName) {
+	ok.Items.prototype[methodName] = function () {
+		var result;
+		var args = slice(arguments);
+		var len = args.length;
+		args.unshift(this);
+		result = _[methodName].apply(_, args);
+		if (len > 0) {
+			result = ok.Items.create(result);
+		}
+		return result;
+	};
+});
+
 /**
  * Create a new instance of this class
  * @static
