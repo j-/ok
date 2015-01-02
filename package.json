@@ -1,5 +1,5 @@
 {
-  "name": "ok",
+  "name": "okaylib",
   "version": "0.3.1",
   "description": "Extensible MVC library",
   "main": "ok.js",

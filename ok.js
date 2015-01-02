@@ -13,7 +13,7 @@ if (typeof define === 'function' && define.amd) {
 	define('ok', ['underscore'], factory);
 }
 else {
-	// project uses require
+	// project uses commonjs
 	if (typeof module !== 'undefined' && typeof require === 'function') {
 		_ = require('underscore');
 		ok = factory(_, root);
