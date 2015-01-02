@@ -42,14 +42,12 @@ var ok = {
 	VERSION: '0.4.0'
 };
 
-if (!root) {
-	root = this;
-}
-var _old = root.ok;
-ok.noConflict = function () {
+// prevent global namespace collisions
+var _old = root ? root.ok : null;
+ok.noConflict = root ? function () {
 	root.ok = _old;
 	return ok;
-};
+} : _.constant(ok);
 
 // internal reference to common prototypes
 var $Array = Array.prototype;
