@@ -404,8 +404,8 @@ ok.Property = ok.Data.extend(/** @lends module:ok.Property.prototype */{
 	 * @fires change
 	 */
 	setValue: function (newValue) {
-		if (this._value !== newValue) {
-			var oldValue = this._value;
+		var oldValue = this._value;
+		if (oldValue !== newValue) {
 			this._value = newValue;
 			this.trigger(EVENT_CHANGE, this, newValue, oldValue);
 		}

@@ -85,7 +85,8 @@ ok.View = ok.Base.extend({
 });
 
 ok.SimpleView = ok.View.extend({
-	init: function () {
+	constructor: function () {
+		ok.View.apply(this, arguments);
 		this.render();
 		this.start();
 	},
