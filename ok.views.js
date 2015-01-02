@@ -4,8 +4,6 @@
 
 ok.View = ok.Base.extend({
 	el: null,
-	ownerDocument: null,
-	nodeType: 1,
 	tagName: 'div',
 	constructor: function (options) {
 		options = options || {};
@@ -33,7 +31,6 @@ ok.View = ok.Base.extend({
 	},
 	setElement: function (el) {
 		this.el = el;
-		this.ownerDocument = el.ownerDocument;
 	},
 	createElement: function () {
 		var el = document.createElement(this.tagName);
