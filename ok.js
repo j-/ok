@@ -676,7 +676,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 */
 	setMap: function (attrs) {
 		attrs = attrs || {};
-		_.each(attrs, function (val, name) {
+		_.forEach(attrs, function (val, name) {
 			this.setValue(name, val);
 		}, this);
 	},
@@ -896,7 +896,7 @@ var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
 	'pluck', 'reduce', 'reduceRight', 'reject', 'rest', 'select', 'shuffle',
 	'sortBy', 'union', 'uniq', 'unique', 'where', 'without', 'zip'];
 
-_.each(itemsMethodsWrap, function (methodName) {
+_.forEach(itemsMethodsWrap, function (methodName) {
 	ok.Items.fn[methodName] = function () {
 		var result;
 		var args = slice(arguments);
@@ -913,7 +913,7 @@ var itemsMethodsNowrap = ['all', 'any', 'contains', 'countBy', 'detect', 'each',
 	'indexOf', 'invoke', 'lastIndexOf', 'max', 'min', 'object', 'size', 'some',
 	'sortedIndex'];
 
-_.each(itemsMethodsNowrap, function (methodName) {
+_.forEach(itemsMethodsNowrap, function (methodName) {
 	ok.Items.fn[methodName] = function () {
 		var result;
 		var args = slice(arguments);
@@ -926,7 +926,7 @@ _.each(itemsMethodsNowrap, function (methodName) {
 // these are special methods whose return value depends on their inputs
 var itemsMethodsSpecial = ['sample', 'first', 'last'];
 
-_.each(itemsMethodsSpecial, function (methodName) {
+_.forEach(itemsMethodsSpecial, function (methodName) {
 	ok.Items.fn[methodName] = function () {
 		var result;
 		var args = slice(arguments);
@@ -1114,7 +1114,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 */
 	findInsertIndex: function (item) {
 		var index = -1;
-		_.each(this.items, function (comparedTo, newIndex) {
+		_.forEach(this.items, function (comparedTo, newIndex) {
 			if (this.comparator(comparedTo, item) <= 0) {
 				index = newIndex;
 				return false;
@@ -1203,7 +1203,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 		if (arguments.length < 2) {
 			context = this;
 		}
-		_.each(this.items, iterator, context);
+		_.forEach(this.items, iterator, context);
 	},
 	/**
 	 * Used to compare two items when sorting.
