@@ -2,29 +2,23 @@
  * ok.js: Model/View/Controller framework
  * @module ok
  */
-(function (factory, root) {
+(function (factory, root, _, ok) {
 
-'use strict';
-
-var _, ok;
-
-// project uses amd
+// amd
 if (typeof define === 'function' && define.amd) {
 	define('ok', ['underscore'], factory);
 }
+// commonjs
+else if (typeof module !== 'undefined' && typeof require === 'function') {
+	_ = require('underscore');
+	ok = factory(_, root);
+	module.exports = ok;
+}
+// globals
 else {
-	// project uses commonjs
-	if (typeof module !== 'undefined' && typeof require === 'function') {
-		_ = require('underscore');
-		ok = factory(_, root);
-		module.exports = ok;
-	}
-	// project is browser
-	else {
-		ok = factory(root._, root);
-		root.ok = ok;
-		root.okaylib = ok;
-	}
+	ok = factory(root._, root);
+	root.ok = ok;
+	root.okaylib = ok;
 }
 
 })(function (_, root) {
@@ -41,6 +35,10 @@ var ok = {
 	 */
 	VERSION: '0.5.1'
 };
+
+if (!_) {
+	throw new Error('ok relies on underscore (underscorejs.org)');
+}
 
 // prevent global namespace collisions
 var _old = root ? root.ok : null;
