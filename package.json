@@ -26,5 +26,8 @@
   "homepage": "https://github.com/j-/ok",
   "dependencies": {
     "underscore": "^1.7.0"
-  }
+  },
+  "files": [
+    "ok.js"
+  ]
 }
