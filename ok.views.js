@@ -1,4 +1,22 @@
-(function (ok) {
+(function (factory, ok) {
+
+// amd
+if (typeof define === 'function' && define.amd) {
+	define('ok.views', ['ok'], factory);
+}
+// commonjs
+else if (typeof module !== 'undefined' && typeof require === 'function') {
+	ok = require('ok');
+	factory(ok);
+	module.exports = ok;
+}
+// globals
+else {
+	ok = window.okaylib;
+	factory(ok);
+}
+
+})(function (ok) {
 
 'use strict';
 
@@ -184,4 +202,4 @@ ok.CollectionView = ok.View.extend({
 	}
 });
 
-})(okaylib);
+});

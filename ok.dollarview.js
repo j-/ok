@@ -1,4 +1,24 @@
-(function (ok, $) {
+(function (factory, ok, $) {
+
+// amd
+if (typeof define === 'function' && define.amd) {
+	define('ok.dollarview', ['ok', 'jquery'], factory);
+}
+// commonjs
+else if (typeof module !== 'undefined' && typeof require === 'function') {
+	ok = require('ok');
+	$ = require('jquery');
+	factory(ok, $);
+	module.exports = ok;
+}
+// globals
+else {
+	ok = window.okaylib;
+	$ = window.jQuery;
+	factory(ok, $);
+}
+
+})(function (ok, $) {
 
 'use strict';
 
@@ -15,4 +35,4 @@ ok.$View = ok.View.extend({
 	}
 });
 
-})(okaylib, jQuery || Zepto || ender || $);
+});
