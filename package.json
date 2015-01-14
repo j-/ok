@@ -1,6 +1,6 @@
 {
   "name": "okaylib",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Extensible MVC library",
   "main": "ok.js",
   "repository": {
