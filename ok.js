@@ -880,7 +880,7 @@ ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototyp
 	 * Get the item at a given index. Can be negative. If no index is given, a
 	 *   reference to the array will be returned.
 	 * @param {int=} Index of item to get
-	 * @return {ok.Items|*?} Item at given index or whole array
+	 * @return {?ok.Items|*} Item at given index or whole array
 	 */
 	get: function (index) {
 		if (arguments.length < 1) {
