@@ -2,11 +2,12 @@
 
 // amd
 if (typeof define === 'function' && define.amd) {
-	define('ok.dollarview', ['ok', 'jquery'], factory);
+	define('ok.dollarview', ['ok', 'ok.views', 'jquery'], factory);
 }
 // commonjs
 else if (typeof module !== 'undefined' && typeof require === 'function') {
 	ok = require('ok');
+	require('ok.views');
 	$ = require('jquery');
 	factory(ok, $);
 	module.exports = ok;
