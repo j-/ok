@@ -1,7 +1,7 @@
 {
   "name": "okaylib",
   "main": "ok.js",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "homepage": "https://github.com/j-/ok",
   "authors": [
     "Jamie Hoeks <j@skeoh.com>"
