@@ -2,7 +2,7 @@
 
 // amd
 if (typeof define === 'function' && define.amd) {
-	define('ok.dollarview', ['ok', 'ok.views', 'jquery'], factory);
+	define('ok.dollarview', ['ok', 'jquery', 'ok.views'], factory);
 }
 // commonjs
 else if (typeof module !== 'undefined' && typeof require === 'function') {
