@@ -538,7 +538,6 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 			Constructor = this.getConstructor(name, value);
 			prop = new Constructor();
 			prop = this.setProperty(name, prop);
-			this.listenTo(prop, EVENT_CHANGE, this.change);
 		}
 		if (typeof value !== 'undefined') {
 			prop.set(value);
@@ -693,8 +692,24 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 * @return {module:ok.Property} The new property
 	 */
 	setProperty: function (name, prop) {
+		this.unsetProperty(name);
 		this.properties[name] = prop;
+		this.listenTo(prop, EVENT_CHANGE, this.change);
 		return prop;
+	},
+	/**
+	 * Remove a single property from the map
+	 * @param {String} name Property name
+	 * @return {?module:ok.Property} Removed property or `null`
+	 */
+	unsetProperty: function (name) {
+		var prop = this.properties[name];
+		if (prop) {
+			this.stopListening(prop, EVENT_CHANGE, this.change);
+			delete this.properties[name];
+			return prop;
+		}
+		return null;
 	}
 });
 
