@@ -1002,13 +1002,13 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 */
 	start: function () {
 		this.stop();
-		this.listenTo(this.items, 'add', this.triggerAdd);
-		this.listenTo(this.items, 'remove', this.triggerRemove);
-		this.listenTo(this.items, 'sort', this.triggerSort);
-		this.listenTo(this.items, 'add', this.updateLength);
-		this.listenTo(this.items, 'remove', this.updateLength);
-		this.listenTo(this.items, 'add', this.watchItem);
-		this.listenTo(this.items, 'remove', this.unwatchItem);
+		this.listenTo(this.items, EVENT_ADD, this.triggerAdd);
+		this.listenTo(this.items, EVENT_REMOVE, this.triggerRemove);
+		this.listenTo(this.items, EVENT_SORT, this.triggerSort);
+		this.listenTo(this.items, EVENT_ADD, this.updateLength);
+		this.listenTo(this.items, EVENT_REMOVE, this.updateLength);
+		this.listenTo(this.items, EVENT_ADD, this.watchItem);
+		this.listenTo(this.items, EVENT_REMOVE, this.unwatchItem);
 	},
 	/**
 	 * Stop listening to change on the internal items storage array
@@ -1024,7 +1024,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @fires add
 	 */
 	triggerAdd: function (item, index) {
-		this.trigger('add', item, index);
+		this.trigger(EVENT_ADD, item, index);
 	},
 	/**
 	 * Handler for the internal items storage array. Called when an item is
@@ -1033,7 +1033,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @fires remove
 	 */
 	triggerRemove: function (item) {
-		this.trigger('remove', item);
+		this.trigger(EVENT_REMOVE, item);
 	},
 	/**
 	 * Handler for the internal items storage array. Called when the array is
@@ -1042,7 +1042,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @fires sort
 	 */
 	triggerSort: function (items) {
-		this.trigger('sort', items);
+		this.trigger(EVENT_SORT, items);
 	},
 	/**
 	 * Handler for the internal items storage array. Called when the array is
@@ -1051,7 +1051,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @fires change
 	 */
 	triggerChange: function (item, newValue, oldValue) {
-		this.trigger('change', item, newValue);
+		this.trigger(EVENT_CHANGE, item, newValue);
 	},
 	/**
 	 * Maintain the length property of this collection. Keep it in sync with the
@@ -1099,14 +1099,14 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @param {*} item New item in `items` array
 	 */
 	watchItem: function (item) {
-		this.listenTo(item, 'change', this.triggerChange);
+		this.listenTo(item, EVENT_CHANGE, this.triggerChange);
 	},
 	/**
 	 * Stop watching an item for changes
 	 * @param {*} item Item in `items` array
 	 */
 	unwatchItem: function (item) {
-		this.stopListening(item, 'change', this.triggerChange);
+		this.stopListening(item, EVENT_CHANGE, this.triggerChange);
 	},
 	/**
 	 * Determine where a newly inserted item would fit in this collection. Find
