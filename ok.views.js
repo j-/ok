@@ -23,6 +23,10 @@ else {
 ok.View = ok.Base.extend({
 	el: null,
 	tagName: 'div',
+	className: null,
+	id: null,
+	isStarted: false,
+	childViews: null,
 	constructor: function (options) {
 		options = options || {};
 		if (options.tagName) {
@@ -44,7 +48,7 @@ ok.View = ok.Base.extend({
 			this.watch = options.watch;
 		}
 		this.isStarted = false;
-		this.childViews = [];
+		this.childViews = new ok.Items();
 		this.init(options);
 	},
 	setElement: function (el) {
@@ -86,19 +90,22 @@ ok.View = ok.Base.extend({
 		return view;
 	},
 	removeChildView: function (view) {
-		var index = _.indexOf(this.childViews, view);
+		var index = this.childViews.indexOf(view);
 		if (index >= 0) {
-			this.childViews.splice(index, 1);
+			this.childViews.remove(index, 1);
+		}
+		if (this.isStarted) {
+			view.stop();
 		}
 	},
 	renderChildViews: function () {
-		_.invoke(this.childViews, 'render');
+		this.childViews.invoke('render');
 	},
 	startChildViews: function () {
-		_.invoke(this.childViews, 'start');
+		this.childViews.invoke('start');
 	},
 	stopChildViews: function () {
-		_.invoke(this.childViews, 'stop');
+		this.childViews.invoke('stop');
 	}
 });
 
@@ -111,7 +118,7 @@ ok.SimpleView = ok.View.extend({
 	render: function () {
 		this.empty();
 		if (this.template) {
-			this.innerHTML = this.template(this.watch.get());
+			this.el.innerHTML = this.template(this.watch.get());
 		}
 	},
 	start: function () {
