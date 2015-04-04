@@ -122,9 +122,7 @@ ok.extendClass = function (Parent) {
 	// sub class
 	var Class = proto && hasProperty(proto, 'constructor') ?
 		proto.constructor :
-		function () {
-			return Parent.apply(this, arguments);
-		};
+		function Class () { return Parent.apply(this, arguments); };
 	ok.inherits(Class, Parent);
 	// copy static properties from super class to sub class
 	_.extend(Class, Parent);
