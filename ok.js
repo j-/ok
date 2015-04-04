@@ -132,6 +132,7 @@ ok.extendClass = function (Parent) {
 	_.extend(Class.prototype, proto);
 	// shortcut
 	Class.fn = Class.prototype;
+	Class.__super__ = Parent.prototype;
 	return Class;
 };
 
@@ -148,6 +149,85 @@ ok.extendThisClass = function () {
 	var protos = slice(arguments);
 	protos.unshift(this);
 	return ok.extendClass.apply(this, protos);
+};
+
+/**
+ * Get the super constructor of a given constructor or prototype. Derives the
+ *   parent from the given child's `__super__` property which is automatically
+ *   assigned by `ok.extendClass()`. If a super constructor is not found,
+ *   `Object` is returned.
+ * @param {Function|Object} obj Constructor or prototype
+ * @return {Function} Parent constructor
+ */
+ok.getSuper = function (obj) {
+	var Class = (typeof obj === 'function') ? obj : obj.constructor;
+	var superProto = Class.__super__;
+	var Super = superProto ? superProto.constructor : Object;
+	return Super;
+};
+
+/**
+ * Get the class which implemented a given method or property.
+ * @param {Function|Object} obj Constructor or prototype
+ * @param {String} method Method or property name
+ * @return {Function} Constructor which implements the given method or property
+ */
+ok.getImplementor = function (obj, method) {
+	var Class = (typeof obj === 'function') ? obj : obj.constructor;
+	var Super;
+	// avoid infinite loop
+	if (Class === Object) {
+		// method can only be found on Object
+		if (hasProperty($Object, method)) {
+			return Object;
+		}
+		// method cannot be found
+		return null;
+	}
+	// this instance implements the method
+	if (_.isObject(obj) && hasProperty(obj, method)) {
+		return Class;
+	}
+	// this class implements the method
+	if (hasProperty(Class.prototype, method)) {
+		return Class;
+	}
+	// this class does not implement the method
+	Super = ok.getSuper(Class);
+	return ok.getImplementor(Super, method);
+};
+
+/**
+ * Calls a super function if it is implemented, no-op otherwise. If no arguments
+ *   are given, the super constructor will be returned.
+ * @param {String=} method Method to call. If no method given, the super
+ *   constructor itself will be called.
+ * @param {Array} args Arguments to send to super function. Can be an arguments
+ *   object or an array.
+ * @return {*} Result of super function call
+ */
+ok.sup = function (first, args) {
+	var superFn, result;
+	var Class = this.constructor;
+	var Super = this.__currentSuper__ ?
+		ok.getSuper(this.__currentSuper__) :
+		ok.getSuper(Class);
+	this.__currentSuper__ = Super;
+	if (typeof first === 'string') {
+		Super = ok.getImplementor(Super, first);
+		superFn = Super && Super.prototype[first];
+		result = (typeof superFn === 'function') ?
+			superFn.apply(this, args) :
+			undefined;
+	}
+	else if (_.isArray(first) || _.isArguments(first)) {
+		result = Super.apply(this, first);
+	}
+	else {
+		result = Super;
+	}
+	delete this.__currentSuper__;
+	return result;
 };
 
 /**
@@ -327,6 +407,16 @@ ok.Base.fn.init = function () {
  * @return {Object} Clone of this instance
  */
 ok.Base.fn.clone = ok.cloneThis;
+
+/**
+ * Call a super function in the prototype chain.
+ * @param {String=} method Method to call. If no method given, the super
+ *   constructor itself will be called.
+ * @param {Array} args Arguments to send to super function. Can be an arguments
+ *   object or an array.
+ * @see module:ok.sup
+ */
+ok.Base.fn.sup = ok.sup;
 
 /**
  * Create a new instance of this class

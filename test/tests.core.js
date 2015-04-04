@@ -63,6 +63,42 @@ QUnit.test('ok.extendThisClass()', function (assert) {
 	assert.equal(Subclass.extend, ok.extendThisClass, 'Can be extended again');
 });
 
+QUnit.test('ok.getSuper()', function (assert) {
+	var Superclass = function () {};
+	var Subclass = ok.extendClass(Superclass);
+	var obj = new Subclass();
+	assert.equal(ok.getSuper(obj), Superclass, 'Can get super constructor of instance');
+	assert.equal(ok.getSuper(Subclass), Superclass, 'Can get super constructor of constructor');
+	assert.equal(ok.getSuper(Subclass.prototype), Superclass, 'Can get super constructor of prototype');
+	assert.equal(ok.getSuper(Superclass), Object, 'Returns `Object` if no super class found');
+	var Newclass = ok.extendClass(Subclass);
+	assert.equal(ok.getSuper(Newclass), Subclass, 'Works with any level of sub class');
+});
+
+QUnit.test('ok.getImplementor()', function (assert) {
+	var Superclass = function Subclass () {};
+	Superclass.prototype.getFoo = function () { return 'foo'; };
+	var Subclass = ok.extendClass(Superclass);
+	Subclass.prototype.getBar = function () { return 'bar'; };
+	var obj = new Subclass();
+	obj.getBaz = function () { return 'baz'; };
+	assert.equal(ok.getImplementor(obj, 'getFoo'), Superclass, 'Can get super constructor from super method');
+	assert.equal(ok.getImplementor(obj, 'getBar'), Subclass, 'Can get constructor from prototype method');
+	assert.equal(ok.getImplementor(obj, 'getBaz'), Subclass, 'Can get constructor from instance method');
+});
+
+QUnit.test('ok.sup()', function (assert) {
+	var Superclass = function Subclass () {};
+	Superclass.prototype.sup = ok.sup;
+	Superclass.prototype.getFoo = function (n) { return 'f' + new Array(n + 1).join('o'); };
+	var Subclass = ok.extendClass(Superclass);
+	Subclass.prototype.getFoo = function () { return this.sup('getFoo', arguments).toUpperCase(); };
+	var obj = new Subclass();
+	assert.equal(obj.sup(), Superclass, 'Can get super constructor');
+	assert.equal(obj.sup('getFoo', [2]), 'foo', 'Can call super function with arguments');
+	assert.equal(obj.getFoo(2), 'FOO', 'Can call super function inside method');
+});
+
 QUnit.test('ok.create()', function (assert) {
 	var Superclass = function () {};
 	var obj = ok.create(Superclass);
