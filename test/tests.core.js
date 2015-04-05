@@ -129,3 +129,40 @@ QUnit.test('ok.cloneThis()', function (assert) {
 	assert.ok(bar instanceof Foo, 'Cloned objects are instances of the same class');
 	assert.equal(bar.value, 12, 'State is cloned');
 });
+
+QUnit.test('ok.toArray()', function (assert) {
+	var result;
+	// arguments test
+	result = ok.toArray((function () { return arguments; })(1, 2, 3));
+	assert.ok(result instanceof Array, 'Arguments: result should be an array');
+	assert.equal(result.length, 3, 'Arguments: result should have correct length');
+	assert.equal(result[2], 3, 'Arguments: result should have correct items');
+	assert.ok(!Object.prototype.hasOwnProperty.call(result, 'callee'), 'Arguments: should not copy `callee`');
+	// array test
+	result = ok.toArray([1, 2, 3]);
+	assert.ok(result instanceof Array, 'Array: result should be an array');
+	assert.equal(result.length, 3, 'Array: result should have correct length');
+	assert.equal(result[2], 3, 'Array: result should have correct items');
+	// ok.Items test
+	result = ok.toArray(ok.Items([1, 2, 3]));
+	assert.ok(result instanceof Array, 'Items: result should be an array');
+	assert.equal(result.length, 3, 'Items: result should have correct length');
+	assert.equal(result[2], 3, 'Items: result should have correct items');
+	// document tests
+	if (typeof document !== 'undefined') {
+		// html collection test
+		var container = document.createElement('div');
+		container.appendChild(document.createElement('h1'));
+		container.appendChild(document.createElement('h2'));
+		container.appendChild(document.createElement('h3'));
+		result = ok.toArray(container.children);
+		assert.ok(result instanceof Array, 'HTMLCollection: result should be an array');
+		assert.equal(result.length, 3, 'HTMLCollection: result should have correct length');
+		assert.equal(result[2].tagName.toLowerCase(), 'h3', 'HTMLCollection: result should have correct items');
+		// node list test
+		result = ok.toArray(container.childNodes);
+		assert.ok(result instanceof Array, 'NodeList: result should be an array');
+		assert.equal(result.length, 3, 'NodeList: result should have correct length');
+		assert.equal(result[2].tagName.toLowerCase(), 'h3', 'NodeList: result should have correct items');
+	}
+});

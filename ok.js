@@ -291,6 +291,32 @@ ok.cloneThis = function () {
 };
 
 /**
+ * Return a plain array representing the given object.
+ * @param {Arguments|Array|Object} obj Object to convert to plain array
+ * @return {Array} Plain array
+ */
+ok.toArray = function (obj) {
+	var result = [];
+	if (obj === undefined || obj === null) {
+		result.push(obj);
+	}
+	else if (typeof obj.forEach === 'function') {
+		obj.forEach(function (item) {
+			result.push(item);
+		});
+	}
+	else if (typeof obj.length === 'number') {
+		_.forEach(slice(obj), function (item) {
+			result.push(item);
+		});
+	}
+	else {
+		result.push(obj);
+	}
+	return result;
+};
+
+/**
  * Class which implements the observable pattern. Exposes methods for listening
  *   to and triggering arbitrary events.
  * @constructor
@@ -833,7 +859,7 @@ ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototyp
 		}
 		Array.call(this);
 		if (items) {
-			this.set(items);
+			this.set(ok.toArray(items));
 		}
 	},
 	/**
@@ -1003,6 +1029,13 @@ ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototyp
 			return this[index];
 		}
 		return null;
+	},
+	/**
+	 * Return a plain array representation of this object.
+	 * @return {Array}
+	 */
+	toArray: function () {
+		return ok.toArray(this);
 	}
 });
 

@@ -2,8 +2,9 @@ QUnit.module('items');
 
 QUnit.test('ok.Items()', function (assert) {
 	assert.equal(typeof ok.Items, 'function', 'Is constructor');
-	assert.ok(new ok.Items(), 'Can be constructed with new');
-	assert.ok(ok.Items.create(), 'Can be constructed with #create()');
+	assert.ok(new ok.Items() instanceof ok.Items, 'Can be constructed with new');
+	assert.ok(ok.Items.create() instanceof ok.Items, 'Can be constructed with #create()');
+	assert.ok(ok.Items() instanceof ok.Items, 'Can be constructed with invokation');
 	var items = new ok.Items([1, 2, 3, 4, 5]);
 	assert.ok(items instanceof Array, 'Inherits from native array constructor');
 	assert.ok(items instanceof ok.Items, 'Object is instance of ok.Items');
