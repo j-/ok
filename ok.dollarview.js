@@ -31,7 +31,7 @@ ok.$View = ok.View.extend({
 		if (el instanceof $) {
 			el = el.get(0);
 		}
-		ok.View.prototype.setElement.call(this, el);
+		this.sup('setElement', arguments);
 		this.$el = $(el);
 	}
 });

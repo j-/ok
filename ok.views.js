@@ -122,7 +122,7 @@ ok.SimpleView = ok.View.extend({
 		}
 	},
 	start: function () {
-		ok.View.fn.start.call(this);
+		this.sup('start');
 		if (this.watch) {
 			this.listenTo(this.watch, 'change', this.render.bind(this));
 		}
@@ -148,7 +148,7 @@ ok.CollectionView = ok.View.extend({
 		}
 	},
 	start: function () {
-		ok.View.fn.start.call(this);
+		this.sup('start');
 		this.listenTo(this.watch, 'add', this.addItem.bind(this));
 		this.listenTo(this.watch, 'remove', this.removeItem.bind(this));
 		this.listenTo(this.watch, 'sort', this.sort.bind(this));
