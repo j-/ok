@@ -231,15 +231,36 @@ ok.sup = function (first, args) {
 /**
  * Return a new instance of a constructor.
  * @param {Function} Class Constructor
+ * @param {Array} args Arguments passed through to constructor
+ * @return {Object} New instance of given constructor
+ */
+ok.createWithArguments = function (Class, args) {
+	args = slice(args);
+	args.unshift(null);
+	// from http://stackoverflow.com/a/18240186
+	// also see http://stackoverflow.com/a/8843181
+	return new ($Function.bind.apply(Class, args))();
+};
+
+/**
+ * Return a new instance of this constructor.
+ * @this {Function} Constructor to create a new instance of
+ * @param {Array} args Arguments passed through to constructor
+ * @return {Object} New instance of given constructor
+ */
+ok.createThisWithArguments = function (args) {
+	return ok.createWithArguments(this, args);
+};
+
+/**
+ * Return a new instance of a constructor.
+ * @param {Function} Class Constructor
  * @param {...*} args Arguments passed through to constructor
  * @return {Object} New instance of given constructor
  */
 ok.create = function (Class) {
-	// from http://stackoverflow.com/a/18240186
-	// also see http://stackoverflow.com/a/8843181
 	var args = slice(arguments, 1);
-	args.unshift(null);
-	return new ($Function.bind.apply(Class, args));
+	return ok.createWithArguments(Class, args);
 };
 
 /**
@@ -249,9 +270,7 @@ ok.create = function (Class) {
  * @return {Object} New instance of this constructor
  */
 ok.createThis = function () {
-	var args = slice(arguments);
-	args.unshift(this);
-	return ok.create.apply(null, args);
+	return ok.createWithArguments(this, arguments);
 };
 
 /**
@@ -809,6 +828,9 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
  */
 ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototype */{
 	constructor: function Items (items) {
+		if (!(this instanceof ok.Items)) {
+			return ok.createWithArguments(ok.Items, arguments);
+		}
 		Array.call(this);
 		if (items) {
 			this.set(items);
