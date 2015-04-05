@@ -986,8 +986,8 @@ ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototyp
 
 // these methods return a copy of input array which we then wrap
 var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
-	'foldl', 'foldr', 'initial', 'inject', 'intersection', 'map', 'partition',
-	'pluck', 'reduce', 'reduceRight', 'reject', 'rest', 'select', 'shuffle',
+	'foldl', 'foldr', 'initial', 'inject', 'intersection', 'invoke', 'map',
+	'partition', 'pluck', 'reduceRight', 'reject', 'rest', 'select', 'shuffle',
 	'sortBy', 'union', 'uniq', 'unique', 'where', 'without', 'zip'];
 
 _.forEach(itemsMethodsWrap, function (methodName) {
@@ -1004,7 +1004,7 @@ _.forEach(itemsMethodsWrap, function (methodName) {
 // these methods return a value within the array or another result not an array
 var itemsMethodsNowrap = ['all', 'any', 'contains', 'countBy', 'detect', 'each',
 	'every', 'find', 'findWhere', 'forEach', 'groupBy', 'include', 'indexBy',
-	'indexOf', 'invoke', 'lastIndexOf', 'max', 'min', 'object', 'size', 'some',
+	'indexOf', 'lastIndexOf', 'max', 'min', 'object', 'reduce', 'size', 'some',
 	'sortedIndex'];
 
 _.forEach(itemsMethodsNowrap, function (methodName) {
