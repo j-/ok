@@ -1006,6 +1006,14 @@ ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototyp
 	}
 });
 
+var invokeMethod = function (obj, methodName, args) {
+	var result;
+	args = slice(args);
+	args.unshift(obj);
+	result = _[methodName].apply(_, args);
+	return result;
+};
+
 // these methods return a copy of input array which we then wrap
 var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
 	'foldl', 'foldr', 'initial', 'inject', 'intersection', 'invoke', 'map',
@@ -1014,10 +1022,7 @@ var itemsMethodsWrap = ['collect', 'compact', 'difference', 'filter', 'flatten',
 
 _.forEach(itemsMethodsWrap, function (methodName) {
 	ok.Items.fn[methodName] = function () {
-		var result;
-		var args = slice(arguments);
-		args.unshift(this);
-		result = _[methodName].apply(_, args);
+		var result = invokeMethod(this, methodName, arguments);
 		result = ok.Items.create(result);
 		return result;
 	};
@@ -1031,10 +1036,7 @@ var itemsMethodsNowrap = ['all', 'any', 'contains', 'countBy', 'detect', 'each',
 
 _.forEach(itemsMethodsNowrap, function (methodName) {
 	ok.Items.fn[methodName] = function () {
-		var result;
-		var args = slice(arguments);
-		args.unshift(this);
-		result = _[methodName].apply(_, args);
+		var result = invokeMethod(this, methodName, arguments);
 		return result;
 	};
 });
@@ -1044,12 +1046,8 @@ var itemsMethodsSpecial = ['sample', 'first', 'last'];
 
 _.forEach(itemsMethodsSpecial, function (methodName) {
 	ok.Items.fn[methodName] = function () {
-		var result;
-		var args = slice(arguments);
-		var len = args.length;
-		args.unshift(this);
-		result = _[methodName].apply(_, args);
-		if (len > 0) {
+		var result = invokeMethod(this, methodName, arguments);
+		if (arguments.length > 0) {
 			result = ok.Items.create(result);
 		}
 		return result;
