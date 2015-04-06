@@ -487,6 +487,15 @@ ok.Base.create = ok.createThis;
 ok.Base.extend = ok.extendThisClass;
 
 /**
+ * Returns the constructor's name.
+ * @static
+ * @return {String} String representation of this class
+ */
+ok.Base.toString = function () {
+	return String(this.name);
+};
+
+/**
  * Define partial functionality to be mixed in with other classes. Methods are
  *   defined in a way that allows for use as a static function as well. The
  *   first argument is reserved for the function's context.
