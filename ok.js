@@ -115,10 +115,16 @@ ok.inherits = function (Child, Parent) {
  */
 ok.extendClass = function (Parent) {
 	var name, value;
+	var constructor;
 	var protos = slice(arguments, 1);
-	var proto = {};
-	protos.unshift(proto);
-	_.extend.apply(_, protos);
+	var statics = {};
+	var proto = _.reduce(protos, function (proto, item) {
+		if (typeof item === 'function') {
+			_.extend(statics, item);
+			item = item.prototype;
+		}
+		return _.extend(proto, item);
+	}, {});
 	// sub class
 	var Class = proto && hasProperty(proto, 'constructor') ?
 		proto.constructor :
@@ -126,6 +132,7 @@ ok.extendClass = function (Parent) {
 	ok.inherits(Class, Parent);
 	// copy static properties from super class to sub class
 	_.extend(Class, Parent);
+	_.extend(Class, statics);
 	// copy prototype from super class to sub class
 	_.extend(Class.prototype, proto);
 	// shortcut
@@ -478,6 +485,37 @@ ok.Base.create = ok.createThis;
  * @see module:ok.extendThisClass
  */
 ok.Base.extend = ok.extendThisClass;
+
+/**
+ * Define partial functionality to be mixed in with other classes. Methods are
+ *   defined in a way that allows for use as a static function as well. The
+ *   first argument is reserved for the function's context.
+ * @constructor
+ * @augments {module:ok.Base}
+ * @param {Object} statics Mixin members
+ */
+ok.Mixin = ok.Base.extend({
+	constructor: function Mixin (statics) {
+		var mixin;
+		var proto = {};
+		_.forEach(statics, function (item, key) {
+			if (typeof item === 'function') {
+				proto[key] = function () {
+					var args = slice(arguments);
+					args.unshift(this);
+					return item.apply(mixin, args);
+				};
+			}
+			else {
+				proto[key] = item;
+			}
+		});
+		mixin = ok.Base.extend(proto);
+		_.extend(mixin, statics);
+		delete mixin.fn.constructor;
+		return mixin;
+	}
+});
 
 /**
  * Data node. Exposes common interface for child classes.
