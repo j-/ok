@@ -128,6 +128,7 @@ ok.extendClass = function (Parent) {
 		}
 		return _.extend(proto, item);
 	}, {});
+	var mergedProto = ok.mergePrototypes(Parent.prototype, proto);
 	// sub class
 	var Class = proto && hasProperty(proto, 'constructor') ?
 		proto.constructor :
@@ -138,6 +139,7 @@ ok.extendClass = function (Parent) {
 	_.extend(Class, statics);
 	// copy prototype from super class to sub class
 	_.extend(Class.prototype, proto);
+	_.extend(Class.prototype, mergedProto);
 	// shortcut
 	Class.fn = Class.prototype;
 	Class.__super__ = Parent.prototype;
@@ -344,6 +346,31 @@ ok.mergeValues = function () {
 };
 
 /**
+ * Combine two prototypes using the `mergeProperties` property of the first.
+ *   Each property existing in both prototypes will be merged.
+ * @property {Object} oldProto First prototype
+ * @property {Object} newProto Second prototype
+ * @return {Object} Merged prototype
+ */
+ok.mergePrototypes = function (oldProto, newProto) {
+	var properties;
+	var mergedProto = {};
+	oldProto = oldProto || {};
+	newProto = newProto || {};
+	properties = _.uniq(ok.mergeValues(
+		oldProto.mergeProperties,
+		newProto.mergeProperties
+	));
+	_.forEach(properties, function (prop) {
+		mergedProto[prop] = ok.mergeValues(
+			oldProto[prop],
+			newProto[prop]
+		);
+	});
+	return mergedProto;
+};
+
+/**
  * Class which implements the observable pattern. Exposes methods for listening
  *   to and triggering arbitrary events.
  * @constructor
@@ -487,6 +514,14 @@ ok.Base.fn.clone = ok.cloneThis;
  * @see module:ok.sup
  */
 ok.Base.fn.sup = ok.sup;
+
+/**
+ * Defines which properties will be merged when this class is extended. Can
+ *   itself be merged.
+ * @property {String[]}
+ * @see module:ok.mergePrototypes
+ */
+ok.Base.fn.mergeProperties = ['mergeProperties'];
 
 /**
  * Create a new instance of this class

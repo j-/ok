@@ -11,3 +11,24 @@ QUnit.test('ok.Base.toString()', function (assert) {
 	});
 	assert.equal(Unnamed.toString(), '(subclass of Sub)', 'Unnamed constructors reference their superclass');
 });
+
+QUnit.test('ok.Base#mergeProperties', function (assert) {
+	var Foo = ok.Base.extend({
+		mergeProperties: 'test',
+		test: 'foo'
+	});
+	var foo = Foo.create();
+	assert.deepEqual(foo.mergeProperties, ['mergeProperties', 'test'], '`mergeProperties` is itself merged');
+	assert.deepEqual(foo.test, ['foo'], 'Initial value is converted to array');
+	var Bar = Foo.extend({
+		test: 'bar'
+	});
+	var bar = Bar.create();
+	assert.deepEqual(bar.mergeProperties, ['mergeProperties', 'test'], '`mergeProperties` is unchanged');
+	assert.deepEqual(bar.test, ['foo', 'bar'], 'New values are merged into the existing properties');
+	var BazQux = Bar.extend({
+		test: ['baz', 'qux']
+	});
+	var bazqux = BazQux.create();
+	assert.deepEqual(bazqux.test, ['foo', 'bar', 'baz', 'qux'], 'Multiple values can be defined');
+});
