@@ -166,3 +166,36 @@ QUnit.test('ok.toArray()', function (assert) {
 		assert.equal(result[2].tagName.toLowerCase(), 'h3', 'NodeList: result should have correct items');
 	}
 });
+
+QUnit.test('ok.mergeValues()', function (assert) {
+	// combine arrays
+	var arr1 = ['a', 'b'];
+	var arr2 = ['d'];
+	var arr = ok.mergeValues(arr1, 'c', arr2, undefined, ['e']);
+	assert.ok(_.isArray(arr), 'Arrays combine into an array');
+	assert.deepEqual(arr, ['a', 'b', 'c', 'd', 'e'], 'Array values can be merged');
+	assert.equal(arr1.length, 2, 'Input was not modified');
+	assert.deepEqual(arr1, ['a', 'b'], 'Input was not modified');
+	// combine objects
+	var obj1 = { foo: 'bar' };
+	var obj2 = { baz: 'qux' };
+	var obj = ok.mergeValues(obj1, undefined, obj2, null);
+	assert.ok(_.isObject(obj), 'Objects combine into an object');
+	assert.equal(obj.foo, 'bar', 'Object values can be merged');
+	assert.equal(obj.baz, 'qux', 'Object values can be merged');
+	assert.ok(!obj1.hasOwnProperty('baz'), 'Input was not modified');
+	assert.ok(!obj2.hasOwnProperty('foo'), 'Input was not modified');
+	// combine strings
+	var str1 = 'foo';
+	var str2 = 'bar';
+	var str = ok.mergeValues(str1, str2);
+	assert.ok(_.isArray(str), 'Strings combine into an array');
+	assert.equal(str.length, 2, 'Output length is correct');
+	assert.deepEqual(str, ['foo', 'bar'], 'Output value is correct');
+	assert.equal(str1, 'foo', 'String values are not modified');
+	assert.equal(str2, 'bar', 'String values are not modified');
+	// other tests
+	assert.ok(ok.mergeValues() instanceof Array, 'Returns an array if no inputs');
+	assert.equal(ok.mergeValues(null), 0, 'Null values have no effect on merge');
+	assert.equal(ok.mergeValues(undefined), 0, 'Undefined values have no effect on merge');
+});

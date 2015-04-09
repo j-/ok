@@ -59,6 +59,9 @@ var slice = function (arr, start, end) {
 var hasProperty = function (obj, property) {
 	return $Object.hasOwnProperty.call(obj, property);
 };
+var isObject = function (obj) {
+	return $Object.toString.call(obj) === '[object Object]';
+};
 
 /**
  * Notification of data being added to a collection
@@ -321,6 +324,23 @@ ok.toArray = function (obj) {
 		result.push(obj);
 	}
 	return result;
+};
+
+/**
+ * Combine variables. Arrays will be concatenated, and objects will be merged.
+ *   Inputs will not be modified.
+ * @params {...*} Values to merge
+ * @result {Object|Array} Merged value
+ */
+ok.mergeValues = function () {
+	// merge if any argument is an object
+	if (_.any(arguments, isObject)) {
+		return _.reduce(arguments, function (result, arg) {
+			return _.extend(result, arg);
+		}, {});
+	}
+	// otherwise concatenate as array
+	return $Array.concat.apply([], _.without(arguments, null, undefined));
 };
 
 /**
