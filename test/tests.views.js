@@ -16,3 +16,12 @@ QUnit.test('ok.View()', function (assert) {
 	assert.deepEqual(custom.classNames, ['ok-view', 'custom-paragraph'], 'Classes can be set on views');
 	assert.deepEqual(ok.toArray(custom.el.classList), ['ok-view', 'custom-paragraph'], 'Classes can be set on view elements');
 });
+
+QUnit.test('ok.View#isStarted', function (assert) {
+	var view = new ok.View();
+	assert.equal(view.isStarted, false, 'Views are not started by default');
+	view.start();
+	assert.equal(view.isStarted, true, 'View can be started');
+	view.stop();
+	assert.equal(view.isStarted, false, 'View can be stopped');
+});
