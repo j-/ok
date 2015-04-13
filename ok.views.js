@@ -21,9 +21,10 @@ else {
 'use strict';
 
 ok.View = ok.Base.extend({
+	mergeProperties: ['classNames'],
+	classNames: ['ok-view'],
 	el: null,
 	tagName: 'div',
-	className: null,
 	id: null,
 	isStarted: false,
 	childViews: null,
@@ -32,8 +33,8 @@ ok.View = ok.Base.extend({
 		if (options.tagName) {
 			this.tagName = options.tagName;
 		}
-		if (options.className) {
-			this.className = options.className;
+		if (options.classNames) {
+			this.classNames = ok.mergeValues(this.classNames, options.classNames);
 		}
 		if (options.el) {
 			this.setElement(options.el);
@@ -56,9 +57,9 @@ ok.View = ok.Base.extend({
 	},
 	createElement: function () {
 		var el = document.createElement(this.tagName);
-		if (this.className) {
-			el.className = this.className;
-		}
+		_.forEach(this.classNames, function (className) {
+			el.classList.add(className);
+		});
 		this.setElement(el);
 	},
 	empty: function () {
