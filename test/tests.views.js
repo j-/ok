@@ -25,3 +25,14 @@ QUnit.test('ok.View#isStarted', function (assert) {
 	view.stop();
 	assert.equal(view.isStarted, false, 'View can be stopped');
 });
+
+QUnit.test('ok.View#setElement()', function (assert) {
+	var a = document.createElement('h1');
+	var b = document.createElement('h2');
+	var view = new ok.View({
+		el: a
+	});
+	assert.equal(view.el, a, 'Views can be initialized with an element');
+	view.setElement(b);
+	assert.equal(view.el, b, 'View element can be set');
+});
