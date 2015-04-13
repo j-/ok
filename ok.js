@@ -491,8 +491,16 @@ ok.Base.extend = ok.extendThisClass;
  * @static
  * @return {String} String representation of this class
  */
-ok.Base.toString = function () {
-	return String(this.name);
+ok.Base.toString = function (Class) {
+	var thisName = String(this.name);
+	var result;
+	if (thisName) {
+		result = Class ? '(subclass of ' + thisName + ')' : thisName;
+	}
+	else {
+		result = ok.getSuper(this).toString(this);
+	}
+	return result;
 };
 
 /**
