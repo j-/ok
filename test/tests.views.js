@@ -36,3 +36,14 @@ QUnit.test('ok.View#setElement()', function (assert) {
 	view.setElement(b);
 	assert.equal(view.el, b, 'View element can be set');
 });
+
+QUnit.test('ok.View#empty()', function (assert) {
+	var view = new ok.View();
+	view.el.appendChild(document.createElement('h1'));
+	view.el.appendChild(document.createTextNode('test content'));
+	view.el.appendChild(document.createElement('h2'));
+	view.el.appendChild(document.createComment('test comment'));
+	assert.notEqual(view.el.childNodes.length, 0, 'View element has children');
+	view.empty();
+	assert.equal(view.el.childNodes.length, 0, 'View can be emptied');
+});

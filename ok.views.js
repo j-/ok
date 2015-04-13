@@ -63,7 +63,7 @@ ok.View = ok.Base.extend({
 		this.setElement(el);
 	},
 	empty: function () {
-		while (this.el.children.length) {
+		while (this.el.childNodes.length) {
 			this.el.removeChild(this.el.firstChild);
 		}
 	},
