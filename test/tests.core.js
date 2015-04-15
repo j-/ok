@@ -119,6 +119,21 @@ QUnit.test('ok.createThis()', function (assert) {
 	assert.equal(foo.value, 12, 'Arguments are passed to constructor');
 });
 
+QUnit.test('ok.include()', function (assert) {
+	var Foo = function () {};
+	Foo.include = ok.include;
+	Foo.fn = Foo.prototype = {
+		include: ok.include
+	};
+	var foo = new Foo();
+	Foo.include({ foo: 'FOO' });
+	Foo.fn.include({ bar: 'BAR' });
+	foo.include({ baz: 'BAZ' });
+	assert.equal(Foo.foo, 'FOO', 'Can include static members into class');
+	assert.equal(foo.bar, 'BAR', 'Can include members into prototype');
+	assert.equal(foo.baz, 'BAZ', 'Can include members into object');
+});
+
 QUnit.test('ok.cloneThis()', function (assert) {
 	var Foo = function (a, b, c) { this.value = a + b + c };
 	Foo.prototype.get = function () { return { value: this.value }; };

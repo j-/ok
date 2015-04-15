@@ -286,6 +286,16 @@ ok.createThis = function () {
 };
 
 /**
+ * Apply members to the current context.
+ * @this {*} Object to apply map to
+ * @param {Object} map Key/value pairs to apply
+ * @return {*} Context for chaining
+ */
+ok.include = function (map) {
+	return _.extend(this, map);
+};
+
+/**
  * Naiive clone implementation based on expected get/set pattern used by Base.
  * @this {Object} instance Instance to clone
  * @param {...*} args Arguments to pass to clone's constructor
@@ -522,6 +532,18 @@ ok.Base.fn.sup = ok.sup;
  * @see module:ok.mergePrototypes
  */
 ok.Base.fn.mergeProperties = ['mergeProperties'];
+
+/**
+ * Extend the current object or prototype's members.
+ * @see module:ok.include
+ */
+ok.Base.fn.include = ok.include;
+
+/**
+ * Extend the current class's static members.
+ * @see module:ok.include
+ */
+ok.Base.include = ok.include;
 
 /**
  * Create a new instance of this class
@@ -1205,6 +1227,12 @@ _.forEach(itemsMethodsSpecial, function (methodName) {
  * @see module:ok.createThis
  */
 ok.Items.create = ok.createThis;
+
+/**
+ * Extend the current object or prototype's members.
+ * @see module:ok.include
+ */
+ok.Items.include = ok.include;
 
 /**
  * Create a new child constructor which extends from this class
