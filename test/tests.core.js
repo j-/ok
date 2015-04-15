@@ -196,6 +196,6 @@ QUnit.test('ok.mergeValues()', function (assert) {
 	assert.equal(str2, 'bar', 'String values are not modified');
 	// other tests
 	assert.ok(ok.mergeValues() instanceof Array, 'Returns an array if no inputs');
-	assert.equal(ok.mergeValues(null), 0, 'Null values have no effect on merge');
-	assert.equal(ok.mergeValues(undefined), 0, 'Undefined values have no effect on merge');
+	assert.equal(ok.mergeValues(null).length, 0, 'Null values have no effect on merge');
+	assert.equal(ok.mergeValues(undefined).length, 0, 'Undefined values have no effect on merge');
 });
