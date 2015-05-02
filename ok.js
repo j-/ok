@@ -381,6 +381,23 @@ ok.mergePrototypes = function (oldProto, newProto) {
 };
 
 /**
+ * Returns a constructor's name.
+ * @this {Function} Constructor to convert to string
+ * @return {String} String representation of this class
+ */
+ok.classToString = function (Class) {
+	var thisName = String(this.name);
+	var result;
+	if (thisName) {
+		result = Class ? '(subclass of ' + thisName + ')' : thisName;
+	}
+	else {
+		result = ok.getSuper(this).toString(this);
+	}
+	return result;
+};
+
+/**
  * Class which implements the observable pattern. Exposes methods for listening
  *   to and triggering arbitrary events.
  * @constructor
@@ -567,18 +584,9 @@ ok.Base.extend = ok.extendThisClass;
  * Returns the constructor's name.
  * @static
  * @return {String} String representation of this class
+ * @see module:ok.classToString
  */
-ok.Base.toString = function (Class) {
-	var thisName = String(this.name);
-	var result;
-	if (thisName) {
-		result = Class ? '(subclass of ' + thisName + ')' : thisName;
-	}
-	else {
-		result = ok.getSuper(this).toString(this);
-	}
-	return result;
-};
+ok.Base.toString = ok.classToString;
 
 /**
  * Define partial functionality to be mixed in with other classes. Methods are
