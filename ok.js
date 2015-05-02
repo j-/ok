@@ -805,7 +805,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 * @return {Object} Defaults
 	 */
 	getDefaults: function () {
-		var defaults = this.constructor.prototype.defaults;
+		var defaults = this.defaults;
 		if (typeof defaults === 'function') {
 			return defaults.apply(this);
 		}
