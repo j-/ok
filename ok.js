@@ -119,8 +119,6 @@ ok.inherits = function (Child, Parent) {
  * @return {Function} Child constructor function
  */
 ok.extendClass = function (Parent) {
-	var name, value;
-	var constructor;
 	var protos = slice(arguments, 1);
 	var statics = {};
 	var proto = _.reduce(protos, function (proto, item) {
@@ -797,7 +795,6 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 */
 	destroy: function () {
 		var properties = this.properties;
-		var prop;
 		_.forEach(properties, function (prop, name) {
 			prop = this.getProperty(name);
 			this.stopListening(prop, EVENT_CHANGE);
@@ -835,7 +832,6 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	initProperty: function (name, value) {
 		var prop = this.getProperty(name);
 		var Constructor;
-		var context = this;
 		if (!prop) {
 			Constructor = this.getConstructor(name, value);
 			prop = new Constructor();
@@ -862,7 +858,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 * @param {*} value Property value
 	 * @return {Function} Constructor function
 	 */
-	getConstructor: function (name, value) {
+	getConstructor: function (name/*, value*/) {
 		var constructor = this.schema && this.schema[name];
 		return constructor || this.defaultConstructor;
 	},
@@ -1343,7 +1339,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @fires change
 	 */
 	triggerChange: function (item, newValue, oldValue) {
-		this.trigger(EVENT_CHANGE, item, newValue);
+		this.trigger(EVENT_CHANGE, item, newValue, oldValue);
 	},
 	/**
 	 * Maintain the length property of this collection. Keep it in sync with the
@@ -1423,7 +1419,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 * @param {*} value New item value
 	 * @return {Function} Constructor for new item
 	 */
-	getConstructor: function (value) {
+	getConstructor: function (/*value*/) {
 		return this.defaultConstructor;
 	},
 	/**
@@ -1488,7 +1484,7 @@ ok.Collection = ok.Data.extend(/** @lends module:ok.Collection.prototype */{
 	 *   value means `a` is larger than `b`. A zero value means `a` and `b` are
 	 *   equal.
 	 */
-	comparator: function (a, b) {
+	comparator: function (/*a, b*/) {
 		return 0;
 	},
 	/**
