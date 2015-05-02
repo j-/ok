@@ -4,6 +4,8 @@
  */
 (function (factory, root, _, ok) {
 
+/* global define, require, module */
+
 // amd
 if (typeof define === 'function' && define.amd) {
 	define('ok', ['underscore'], factory);
