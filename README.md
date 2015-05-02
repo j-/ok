@@ -34,7 +34,7 @@ bower install --save okaylib
 Or include the JS file:
 
 ```html
-<script src="https://cdn.rawgit.com/j-/ok/0.5.5/ok.js"></script>
+<script src="https://cdn.rawgit.com/j-/ok/0.5.6/ok.js"></script>
 ```
 
 ## Using

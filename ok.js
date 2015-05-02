@@ -33,7 +33,7 @@ var ok = {
 	 * Current version of ok.js
 	 * @const {string}
 	 */
-	VERSION: '0.5.5'
+	VERSION: '0.5.6'
 };
 
 if (!_) {
