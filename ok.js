@@ -162,6 +162,33 @@ ok.extendThisClass = function () {
 };
 
 /**
+ * Extend a native constructor, like Array, Error, String etc.
+ * @param {Function} native Native constructor to extend
+ * @param {...Object} [protos] Extended prototypes
+ * @return {Function} Child constructor function
+ */
+ok.extendNative = function () {
+	var args = slice(arguments);
+	var proto = {
+		include: ok.include,
+		sup: ok.sup,
+		clone: ok.cloneThis,
+		mergeProperties: ['mergeProperties']
+	};
+	var statics = {
+		create: ok.createThis,
+		extend: ok.extendThisClass,
+		include: ok.include,
+		toString: ok.classToString
+	};
+	args.splice(1, 0, proto, ok.Events.fn);
+	var Result = ok.extendClass.apply(ok, args);
+	Result.include = ok.include;
+	Result.include(statics);
+	return Result;
+};
+
+/**
  * Get the super constructor of a given constructor or prototype. Derives the
  *   parent from the given child's `__super__` property which is automatically
  *   assigned by `ok.extendClass()`. If a super constructor is not found,
@@ -992,7 +1019,7 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
  * @augments {Array}
  * @augments {module:ok.Base}
  */
-ok.Items = ok.extendClass(Array, ok.Base.fn, /** @lends module:ok.Items.prototype */{
+ok.Items = ok.extendNative(Array, /** @lends module:ok.Items.prototype */{
 	constructor: function Items (items) {
 		if (!(this instanceof ok.Items)) {
 			return ok.createWithArguments(ok.Items, arguments);
@@ -1226,30 +1253,6 @@ _.forEach(itemsMethodsSpecial, function (methodName) {
 		return result;
 	};
 });
-
-/**
- * Create a new instance of this class
- * @static
- * @function
- * @param {...*} args Arguments passed through to the constructor function
- * @see module:ok.createThis
- */
-ok.Items.create = ok.createThis;
-
-/**
- * Extend the current object or prototype's members.
- * @see module:ok.include
- */
-ok.Items.include = ok.include;
-
-/**
- * Create a new child constructor which extends from this class
- * @static
- * @function
- * @param {Object} proto Prototype object
- * @see module:ok.extendThisClass
- */
-ok.Items.extend = ok.extendThisClass;
 
 /**
  * Collections maintain an array of items
