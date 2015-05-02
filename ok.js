@@ -1559,6 +1559,52 @@ ok.Controller = ok.Base.extend(/** @lends module:ok.Controller.prototype */{
 	}
 });
 
+/**
+ * Extended error constructor. Can extended to create custom error classes.
+ * @class
+ * @augments {Error}
+ * @augments {module:ok.Base}
+ * @param {Object} options Instance members
+ * @param {String=} options.name Error name
+ * @param {String=} options.message Description of error
+ * @param {String=} options.url Optional URL to display with the error
+ */
+ok.Error = ok.extendNative(Error, /** @lends module:ok.Error.prototype */{
+	constructor: function Error (message, options) {
+		if (typeof message === 'string') {
+			this.message = message;
+		}
+		else {
+			options = message;
+		}
+		this.include(options);
+	},
+	/**
+	 * Error variant. Used to classify errors.
+	 * @property {String}
+	 */
+	name: 'ok.Error',
+	/**
+	 * Display the contents of this error. Always shows the name. If the message
+	 *   exists it is also displayed. A URL to, for example, help documentation
+	 *   can be displayed as well.
+	 * @return {String} Contents of this error
+	 */
+	toString: function () {
+		var message = this.message;
+		var name = this.name;
+		var url = this.url;
+		var result = name;
+		if (message) {
+			result +=  ': ' + message;
+		}
+		if (url) {
+			result += ' (' + url + ')';
+		}
+		return result;
+	}
+});
+
 return ok;
 
 }, this);
