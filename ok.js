@@ -368,7 +368,7 @@ ok.toArray = function (obj) {
 /**
  * Combine variables. Arrays will be concatenated, and objects will be merged.
  *   Inputs will not be modified.
- * @params {...*} Values to merge
+ * @param {...*} Values to merge
  * @result {Object|Array} Merged value
  */
 ok.mergeValues = function () {
@@ -385,8 +385,8 @@ ok.mergeValues = function () {
 /**
  * Combine two prototypes using the `mergeProperties` property of the first.
  *   Each property existing in both prototypes will be merged.
- * @property {Object} oldProto First prototype
- * @property {Object} newProto Second prototype
+ * @param {Object} oldProto First prototype
+ * @param {Object} newProto Second prototype
  * @return {Object} Merged prototype
  */
 ok.mergePrototypes = function (oldProto, newProto) {
