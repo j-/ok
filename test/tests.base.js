@@ -18,13 +18,13 @@ QUnit.test('ok.Base#mergeProperties', function (assert) {
 		test: 'foo'
 	});
 	var foo = Foo.create();
-	assert.deepEqual(foo.mergeProperties, ['mergeProperties', 'test'], '`mergeProperties` is itself merged');
+	assert.deepEqual(foo.mergeProperties, ['mergeProperties', 'injects', 'test'], '`mergeProperties` is itself merged');
 	assert.deepEqual(foo.test, ['foo'], 'Initial value is converted to array');
 	var Bar = Foo.extend({
 		test: 'bar'
 	});
 	var bar = Bar.create();
-	assert.deepEqual(bar.mergeProperties, ['mergeProperties', 'test'], '`mergeProperties` is unchanged');
+	assert.deepEqual(bar.mergeProperties, ['mergeProperties', 'injects', 'test'], '`mergeProperties` is unchanged');
 	assert.deepEqual(bar.test, ['foo', 'bar'], 'New values are merged into the existing properties');
 	var BazQux = Bar.extend({
 		test: ['baz', 'qux']

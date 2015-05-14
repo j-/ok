@@ -173,7 +173,7 @@ ok.extendNative = function () {
 		include: ok.include,
 		sup: ok.sup,
 		clone: ok.cloneThis,
-		mergeProperties: ['mergeProperties']
+		mergeProperties: ['mergeProperties', 'injects']
 	};
 	var statics = {
 		create: ok.createThis,
@@ -425,6 +425,59 @@ ok.classToString = function (Class) {
 };
 
 /**
+ * Get the properties from a super object to inject into a child object.
+ * @param {Object} obj Object to get properties from
+ * @param {String[]?} injects Collection of property names to pick from super
+ *   object. If omitted, this value will be read from `obj.injects`.
+ * @return {Object} Map of injections
+ */
+ok.getInjectionsFor = function (obj, injects) {
+	var injects = injects || obj.injects;
+	var injections = _.pick(obj, injects);
+	return injections;
+};
+
+/**
+ * Create a child object using this object and its injections.
+ * @this {Object} Super object
+ * @param {Function} Constructor Child constructor
+ * @param {Object=} options Optional map of constructor options. Will be
+ *   replaced with a copy that has been merged with injections.
+ * @param {...*} args Other arguments to pass to constructor function
+ * @return {Object} Returns `this` for chaining
+ * @chainable
+ */
+ok.createChild = function (Constructor) {
+	var args = slice(arguments, 1);
+	var options = args[0];
+	var injections, child;
+	if (isObject(options)) {
+		injections = ok.getInjectionsFor(this);
+		args[0] = _.merge({}, injections, options);
+	}
+	child = ok.createWithArguments(Constructor, args);
+	this.addChild(child);
+	return this;
+};
+
+/**
+ * Stores a newly created child object against an internal list of children.
+ *   This list will be created if it does not already exist.
+ * @this {Object} Super object
+ * @param {Object} child Child object to store
+ * @return {Object} Returns `this` for chaining
+ * @chainable
+ */
+ok.addChild = function (child) {
+	// ensure child collection
+	if (!hasProperty(this, 'children')) {
+		this.children = new ok.Items();
+	}
+	this.children.push(child);
+	return this;
+};
+
+/**
  * Class which implements the observable pattern. Exposes methods for listening
  *   to and triggering arbitrary events.
  * @constructor
@@ -537,6 +590,7 @@ ok.Events.fn = ok.Events.prototype;
  */
 ok.Base = function Base (/* args... */) {
 	var args = slice(arguments);
+	this.children = new ok.Items();
 	if (this.init) {
 		this.init.apply(this, args);
 	}
@@ -575,13 +629,32 @@ ok.Base.fn.sup = ok.sup;
  * @property {String[]}
  * @see module:ok.mergePrototypes
  */
-ok.Base.fn.mergeProperties = ['mergeProperties'];
+ok.Base.fn.mergeProperties = ['mergeProperties', 'injects'];
 
 /**
  * Extend the current object or prototype's members.
  * @see module:ok.include
  */
 ok.Base.fn.include = ok.include;
+
+/**
+ * Create and maintain a new child object.
+ * @static
+ * @function
+ * @param {Function} constructor Constructor function to initialize
+ * @param {...*} args Arguments passed through to the constructor function
+ * @see module:ok.createChild
+ */
+ok.Base.fn.create = ok.createChild;
+
+/**
+ * Maintain a new child object.
+ * @static
+ * @function
+ * @param {Object} instance Child object to maintain
+ * @see module:ok.createChild
+ */
+ok.Base.fn.addChild = ok.addChild;
 
 /**
  * Extend the current class's static members.

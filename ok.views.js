@@ -23,6 +23,7 @@ else {
 ok.View = ok.Base.extend({
 	mergeProperties: ['classNames'],
 	classNames: ['ok-view'],
+	injects: ['el', 'watch', 'isStarted'],
 	el: null,
 	tagName: 'div',
 	id: null,
