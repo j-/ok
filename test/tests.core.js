@@ -3,6 +3,7 @@ QUnit.module('core');
 QUnit.test('ok', function (assert) {
 	assert.ok(ok, 'Found ok');
 	assert.ok(typeof ok.VERSION === 'string', 'Has version');
+	console.info('ok', ok.VERSION);
 });
 
 // QUnit exposes its own `ok` global
