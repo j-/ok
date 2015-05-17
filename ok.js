@@ -453,7 +453,7 @@ ok.createChild = function (Constructor) {
 	var injections, child;
 	if (isObject(options)) {
 		injections = ok.getInjectionsFor(this);
-		args[0] = _.merge({}, injections, options);
+		args[0] = _.extend({}, injections, options);
 	}
 	child = ok.createWithArguments(Constructor, args);
 	this.addChild(child);
