@@ -444,8 +444,7 @@ ok.getInjectionsFor = function (obj, injects) {
  * @param {Object=} options Optional map of constructor options. Will be
  *   replaced with a copy that has been merged with injections.
  * @param {...*} args Other arguments to pass to constructor function
- * @return {Object} Returns `this` for chaining
- * @chainable
+ * @return {Object} Returns newly created child
  */
 ok.createChild = function (Constructor) {
 	var args = slice(arguments, 1);
@@ -457,7 +456,7 @@ ok.createChild = function (Constructor) {
 	}
 	child = ok.createWithArguments(Constructor, args);
 	this.addChild(child);
-	return this;
+	return child;
 };
 
 /**
@@ -465,8 +464,7 @@ ok.createChild = function (Constructor) {
  *   This list will be created if it does not already exist.
  * @this {Object} Super object
  * @param {Object} child Child object to store
- * @return {Object} Returns `this` for chaining
- * @chainable
+ * @return {Object} Returns newly created child
  */
 ok.addChild = function (child) {
 	// ensure child collection
@@ -474,7 +472,7 @@ ok.addChild = function (child) {
 		this.children = new ok.Items();
 	}
 	this.children.push(child);
-	return this;
+	return child;
 };
 
 /**
