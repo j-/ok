@@ -819,9 +819,9 @@ ok.Map = ok.Data.extend(/** @lends module:ok.Map.prototype */{
 	 */
 	initProperties: function (properties) {
 		properties = properties || {};
-		_.forEach(properties, function (property) {
+		_.forEach(properties, function (property, name) {
 			this.initProperty(name, property);
-		});
+		}, this);
 	},
 	/**
 	 * Declare the value of a single property
