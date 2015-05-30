@@ -450,7 +450,7 @@ ok.createChild = function (Constructor) {
 	var args = slice(arguments, 1);
 	var options = args[0];
 	var injections, child;
-	if (isObject(options)) {
+	if (isObject(options) || options === undefined) {
 		injections = ok.getInjectionsFor(this);
 		args[0] = _.extend({}, injections, options);
 	}
