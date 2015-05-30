@@ -83,7 +83,7 @@ ok.View = ok.Base.extend({
 	},
 	addChildView: function (view, options) {
 		if (typeof view === 'function') {
-			view = new view(options);
+			view = this.create(view, options);
 		}
 		this.childViews.push(view);
 		if (this.isStarted) {
